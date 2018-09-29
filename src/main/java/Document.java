@@ -30,6 +30,6 @@ public class Document {
             likelihood = likelihood * featureLikelihood;
         }
 
-        return likelihood
+        return likelihood;
     }
 }

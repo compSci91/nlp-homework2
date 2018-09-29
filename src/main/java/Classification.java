@@ -6,17 +6,12 @@ public class Classification {
     Map<String, Integer> words;
     public final int numberOfFiles;
 
-    public Classification(File directory){
+    public Classification(List<File> sourceFiles){
         words = new HashMap<String, Integer>();
 
+        this.numberOfFiles = sourceFiles.size();
 
-        File[] listOfFiles = directory.listFiles();
-
-        numberOfFiles = listOfFiles.length;
-
-
-        for(int i = 0; i< numberOfFiles; i++){
-            File sourceFile = listOfFiles[i];
+        for(File sourceFile : sourceFiles){
             Scanner scanner = null;
 
             try {
