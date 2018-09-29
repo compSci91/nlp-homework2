@@ -23,12 +23,25 @@ public class Document {
     }
 
     public double calculateLikelihood(Classification classification) {
-        double likelihood = 1;
+        //double likelihood = 1;
+        double likelihood = 0;
 
         for(String word : words){
-            double featureLikelihood = classification.calculateFeatureLikelihood(word);
-            likelihood = likelihood * featureLikelihood;
+//            double featureLikelihood = classification.calculateFeatureLikelihood(word);
+            double featureLikelihood = Math.log(classification.calculateFeatureLikelihood(word));
+
+            //System.out.println("Feature Likelihood for word: " + word + " is " + featureLikelihood);
+
+           // likelihood = likelihood * featureLikelihood;
+
+            likelihood += featureLikelihood;
+
+            if(likelihood == 0){
+                System.out.println("Likelihood is 0!");
+            }
         }
+
+
 
         return likelihood;
     }

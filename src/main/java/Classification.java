@@ -7,7 +7,7 @@ public class Classification {
     public final int numberOfFiles;
 
     public Classification(List<File> sourceFiles){
-        words = new HashMap<String, Integer>();
+        this.words = new HashMap<String, Integer>();
 
         this.numberOfFiles = sourceFiles.size();
 
@@ -24,9 +24,11 @@ public class Classification {
                 String word = scanner.next();
 
                 if(words.containsKey(word)){
-                    words.put(word, 1);
-                } else {
                     words.put(word, words.get(word) + 1);
+
+                } else {
+                    this.words.put(word, 1);
+
                 }
             }
         }
@@ -51,10 +53,10 @@ public class Classification {
     }
 
     public double calculateFeatureLikelihood(String documentWord){
-        return (double) retrieveNumberOfWordAppearances(documentWord) / (double) retrieveTotalNumberOfWordsInTheClassification();
+        return ((double) retrieveNumberOfWordAppearances(documentWord) + 1 )/ ((double) retrieveTotalNumberOfWordsInTheClassification() + words.keySet().size());
     }
 
     public double calculatePrior(int totalNumberOfDocuments){
-        return this.numberOfFiles / totalNumberOfDocuments;
+        return (double) this.numberOfFiles / (double) totalNumberOfDocuments;
     }
 }
