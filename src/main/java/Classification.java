@@ -4,6 +4,7 @@ import java.util.*;
 
 public class Classification {
     Map<String, Integer> words;
+    public final int numberOfFiles;
 
     public Classification(File directory){
         words = new HashMap<String, Integer>();
@@ -11,7 +12,10 @@ public class Classification {
 
         File[] listOfFiles = directory.listFiles();
 
-        for(int i = 0; i< listOfFiles.length; i++){
+        numberOfFiles = listOfFiles.length;
+
+
+        for(int i = 0; i< numberOfFiles; i++){
             File sourceFile = listOfFiles[i];
             Scanner scanner = null;
 
@@ -33,7 +37,7 @@ public class Classification {
         }
     }
 
-    public int retrieveWordAppearances(String word){
+    public int retrieveNumberOfWordAppearances(String word){
         if(words.containsKey(word)){
             return words.get(word);
         } else {
@@ -41,15 +45,21 @@ public class Classification {
         }
     }
 
-    public double calculateLikelihood(String documentWord){
-        int wordAppearances = retrieveWordAppearances(documentWord);
-        int numberOfWordsInCategory = 0;
+    public int retrieveTotalNumberOfWordsInTheClassification() {
+        int totalNumberOfWordsInClassification = 0;
 
         for(String word : words.keySet()){
-            numberOfWordsInCategory += retrieveWordAppearances(word);
+            totalNumberOfWordsInClassification += retrieveNumberOfWordAppearances(word);
         }
 
-        return (double) wordAppearances / (double) numberOfWordsInCategory;
+        return totalNumberOfWordsInClassification;
+    }
 
+    public double calculateFeatureLikelihood(String documentWord){
+        return (double) retrieveNumberOfWordAppearances(documentWord) / (double) retrieveTotalNumberOfWordsInTheClassification();
+    }
+
+    public double calculatePrior(int totalNumberOfDocuments){
+        return this.numberOfFiles / totalNumberOfDocuments;
     }
 }

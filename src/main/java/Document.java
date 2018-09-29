@@ -21,4 +21,15 @@ public class Document {
             words.add(scanner.next());
         }
     }
+
+    public double calculateLikelihood(Classification classification) {
+        double likelihood = 1;
+
+        for(String word : words){
+            double featureLikelihood = classification.calculateFeatureLikelihood(word);
+            likelihood = likelihood * featureLikelihood;
+        }
+
+        return likelihood
+    }
 }
