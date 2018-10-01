@@ -7,7 +7,7 @@ public class Classification {
     public final int numberOfFiles;
     private int totalNumberOfWordsInClassification;
 
-    public Classification(List<File> sourceFiles, Set<String> stopWords){
+    public Classification(List<File> sourceFiles, Set<String> stopWords, boolean BOOLEAN_NB){
         this.words = new HashMap<String, Integer>();
 
         this.numberOfFiles = sourceFiles.size();
@@ -21,14 +21,27 @@ public class Classification {
                 e.printStackTrace();
             }
 
+
+
             while(scanner.hasNext()){
                 String word = scanner.next();
 
                 if(!stopWords.contains(word)) {
 
                     if (words.containsKey(word)) {
-                        totalNumberOfWordsInClassification++;
-                        words.put(word, words.get(word) + 1);
+
+                        if(BOOLEAN_NB){
+                            //Ignore it
+                        } else {
+                            totalNumberOfWordsInClassification++;
+                            words.put(word, words.get(word) + 1);
+                        }
+
+
+
+
+
+
 
                     } else {
                         totalNumberOfWordsInClassification++;

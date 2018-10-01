@@ -10,7 +10,8 @@ public class Main {
         Map<Document, Double> positiveScores = new HashMap<Document, Double>();
         Map<Document, Double> negativeScores = new HashMap<Document, Double>();
 
-        boolean FILTER_STOP_WORDS = false;
+        boolean FILTER_STOP_WORDS = true;
+        boolean BOOLEAN_NB = true;
 
         Set<String> stopWords = new HashSet<String>();
 
@@ -62,13 +63,13 @@ public class Main {
         System.out.println("Get positive Files");
             List<File> positiveTestFiles = crossValidationSorter.retrieveFilesInRange(positiveDirectory, i, i+99);
             List<File> positiveTrainingFiles = crossValidationSorter.retrieveFilesOutNotInRange(positiveDirectory, i, i+99);
-            Classification positiveClassification = new Classification(positiveTrainingFiles, stopWords);
+            Classification positiveClassification = new Classification(positiveTrainingFiles, stopWords, BOOLEAN_NB);
 
 
         System.out.println("Get negative files. ");
             List<File> negativeTestFiles = crossValidationSorter.retrieveFilesInRange(negativeDirectory, i, i+99);
             List<File> negativeTrainingFiles = crossValidationSorter.retrieveFilesOutNotInRange(negativeDirectory, i, i+99);
-            Classification negativeClassification = new Classification(negativeTrainingFiles, stopWords);
+            Classification negativeClassification = new Classification(negativeTrainingFiles, stopWords,  BOOLEAN_NB);
 
 
             int totalNumberOfDocuments = positiveTestFiles.size() + negativeTestFiles.size();
