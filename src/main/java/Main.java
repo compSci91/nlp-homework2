@@ -1,8 +1,6 @@
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.FileNotFoundException;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,13 +10,35 @@ public class Main {
         Map<Document, Double> positiveScores = new HashMap<Document, Double>();
         Map<Document, Double> negativeScores = new HashMap<Document, Double>();
 
+        boolean FILTER_STOP_WORDS = true;
+
+        Set<String> stopWords = new HashSet<String>();
+
+        if(FILTER_STOP_WORDS){
+            File stopWordsFile = new File("/Users/JoshuaHowell/Desktop/Texas A&M/Year 2/Fall 2018/Natural Language Processing/Homework 2/data/english.stop");
+            Scanner scanner = null;
+
+            try {
+                scanner = new Scanner(stopWordsFile);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            while(scanner.hasNext()){
+                stopWords.add(scanner.next());
+            }
+
+        }
+
+
+
 
         //Create Documents
         File[] positiveFiles = positiveDirectory.listFiles();
 
         for (int i = 0; i < positiveFiles.length; i++){
             File positiveFile = positiveFiles[i];
-            Document positiveDocument = new Document(positiveFile);
+            Document positiveDocument = new Document(positiveFile, stopWords);
 
             positiveScores.put(positiveDocument, 0.0);
             negativeScores.put(positiveDocument, 0.0);
@@ -28,7 +48,7 @@ public class Main {
 
         for (int i = 0; i < negativeFiles.length; i++){
             File negativeFile = negativeFiles[i];
-            Document negativeDocument = new Document(negativeFile);
+            Document negativeDocument = new Document(negativeFile, stopWords);
 
             positiveScores.put(negativeDocument, 0.0);
             negativeScores.put(negativeDocument, 0.0);
@@ -42,13 +62,13 @@ public class Main {
         System.out.println("Get positive Files");
             List<File> positiveTestFiles = crossValidationSorter.retrieveFilesInRange(positiveDirectory, i, i+99);
             List<File> positiveTrainingFiles = crossValidationSorter.retrieveFilesOutNotInRange(positiveDirectory, i, i+99);
-            Classification positiveClassification = new Classification(positiveTrainingFiles);
+            Classification positiveClassification = new Classification(positiveTrainingFiles, stopWords);
 
 
         System.out.println("Get negative files. ");
             List<File> negativeTestFiles = crossValidationSorter.retrieveFilesInRange(negativeDirectory, i, i+99);
             List<File> negativeTrainingFiles = crossValidationSorter.retrieveFilesOutNotInRange(negativeDirectory, i, i+99);
-            Classification negativeClassification = new Classification(negativeTrainingFiles);
+            Classification negativeClassification = new Classification(negativeTrainingFiles, stopWords);
 
 
             int totalNumberOfDocuments = positiveTestFiles.size() + negativeTestFiles.size();
@@ -57,7 +77,7 @@ public class Main {
      //   System.out.println("*********** Calculate scores for positive files ***********");
             for(File positiveFile : positiveTestFiles){
                 System.out.println("Working on: " + positiveFile.getName());
-                Document positiveDocument = new Document(positiveFile);
+                Document positiveDocument = new Document(positiveFile, stopWords);
 
                 double bayesianPositivePercentage = positiveDocument.calculateLikelihood(positiveClassification) * positiveClassification.calculatePrior(totalNumberOfDocuments);
                 positiveScores.put(positiveDocument, bayesianPositivePercentage);
@@ -72,7 +92,7 @@ public class Main {
         for(File negativeFile : negativeTestFiles){
             System.out.println("Working on: " + negativeFile.getName());
 
-            Document negativeDocument = new Document(negativeFile);
+            Document negativeDocument = new Document(negativeFile, stopWords);
 
                 double bayesianPositivePercentage = negativeDocument.calculateLikelihood(positiveClassification) * positiveClassification.calculatePrior(totalNumberOfDocuments);
                 positiveScores.put(negativeDocument, positiveScores.get(negativeDocument) + bayesianPositivePercentage);
@@ -84,7 +104,7 @@ public class Main {
             int numberOfAccuratelyClassifiedDocuments = 0;
 
             for(File positiveFile : positiveTestFiles) {
-                Document positiveDocument = new Document(positiveFile);
+                Document positiveDocument = new Document(positiveFile, stopWords);
 
                 if(positiveScores.get(positiveDocument) >= negativeScores.get(positiveDocument)){
                     numberOfAccuratelyClassifiedDocuments++;
@@ -92,7 +112,7 @@ public class Main {
             }
 
             for(File negativeFile : negativeTestFiles) {
-                Document positiveDocument = new Document(negativeFile);
+                Document positiveDocument = new Document(negativeFile, stopWords);
 
                 if(negativeScores.get(positiveDocument) >= positiveScores.get(positiveDocument)){
                     numberOfAccuratelyClassifiedDocuments++;

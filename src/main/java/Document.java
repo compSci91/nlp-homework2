@@ -8,7 +8,7 @@ public class Document {
     Set<String> words;
     File sourceFile;
 
-    public Document(File sourceFile){
+    public Document(File sourceFile, Set<String> stopWords){
         this.sourceFile = sourceFile;
         words = new HashSet<String>();
         Scanner scanner = null;
@@ -20,7 +20,12 @@ public class Document {
         }
 
         while(scanner.hasNext()){
-            words.add(scanner.next());
+            String nextWord = scanner.next();
+
+            if(!stopWords.contains(nextWord)){
+                words.add(nextWord);
+            }
+
         }
     }
 

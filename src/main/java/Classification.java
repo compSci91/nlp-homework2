@@ -6,7 +6,7 @@ public class Classification {
     Map<String, Integer> words;
     public final int numberOfFiles;
 
-    public Classification(List<File> sourceFiles){
+    public Classification(List<File> sourceFiles, Set<String> stopWords){
         this.words = new HashMap<String, Integer>();
 
         this.numberOfFiles = sourceFiles.size();
@@ -23,12 +23,15 @@ public class Classification {
             while(scanner.hasNext()){
                 String word = scanner.next();
 
-                if(words.containsKey(word)){
-                    words.put(word, words.get(word) + 1);
+                if(!stopWords.contains(word)) {
 
-                } else {
-                    this.words.put(word, 1);
+                    if (words.containsKey(word)) {
+                        words.put(word, words.get(word) + 1);
 
+                    } else {
+                        this.words.put(word, 1);
+
+                    }
                 }
             }
         }
