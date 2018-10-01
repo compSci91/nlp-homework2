@@ -13,44 +13,57 @@ public class Classification {
         this.numberOfFiles = sourceFiles.size();
 
         for(File sourceFile : sourceFiles){
-            Scanner scanner = null;
-
-            try {
-                scanner = new Scanner(sourceFile);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
 
 
+            if(BOOLEAN_NB) {
+                Set<String> documentWords = new Document(sourceFile, stopWords).getWords();
 
-            while(scanner.hasNext()){
-                String word = scanner.next();
-
-                if(!stopWords.contains(word)) {
-
-                    if (words.containsKey(word)) {
-
-                        if(BOOLEAN_NB){
-                            //Ignore it
-                        } else {
-                            totalNumberOfWordsInClassification++;
-                            words.put(word, words.get(word) + 1);
-                        }
-
-
-
-
-
-
+                for (String documentWord : documentWords) {
+                    if (words.containsKey(documentWord)) {
+                        totalNumberOfWordsInClassification++;
+                        words.put(documentWord, words.get(documentWord) + 1);
 
                     } else {
                         totalNumberOfWordsInClassification++;
-                        this.words.put(word, 1);
+                        this.words.put(documentWord, 1);
 
                     }
                 }
+            } else {
+
+
+                Scanner scanner = null;
+
+                try {
+                    scanner = new Scanner(sourceFile);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+
+                while (scanner.hasNext()) {
+                    String word = scanner.next();
+
+                    if (!stopWords.contains(word)) {
+
+                        if (words.containsKey(word)) {
+
+                            if (BOOLEAN_NB) {
+
+                            } else {
+                                totalNumberOfWordsInClassification++;
+                                words.put(word, words.get(word) + 1);
+                            }
+
+                        } else {
+                            totalNumberOfWordsInClassification++;
+                            this.words.put(word, 1);
+
+                        }
+                    }
+                } //whie loop
             }
-        }
+        } // end giant for loop
     }
 
     public int retrieveNumberOfWordAppearances(String word){

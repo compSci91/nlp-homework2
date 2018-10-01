@@ -11,7 +11,7 @@ public class Main {
         Map<Document, Double> negativeScores = new HashMap<Document, Double>();
 
         boolean FILTER_STOP_WORDS = true;
-        boolean BOOLEAN_NB = true;
+        boolean BOOLEAN_NB = false;
 
         Set<String> stopWords = new HashSet<String>();
 

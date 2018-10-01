@@ -23,10 +23,15 @@ public class Document {
             String nextWord = scanner.next();
 
             if(!stopWords.contains(nextWord)){
-                words.add(nextWord);
+                    words.add(nextWord);
+
             }
 
         }
+    }
+
+    public Set<String> getWords(){
+        return words;
     }
 
     public double calculateLikelihood(Classification classification) {
