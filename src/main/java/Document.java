@@ -6,8 +6,10 @@ import java.util.Set;
 
 public class Document {
     Set<String> words;
+    File sourceFile;
 
     public Document(File sourceFile){
+        this.sourceFile = sourceFile;
         words = new HashSet<String>();
         Scanner scanner = null;
 
@@ -44,5 +46,24 @@ public class Document {
 
 
         return likelihood;
+    }
+
+
+
+
+    @Override
+    public int hashCode(){
+        return sourceFile.getName().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Document document = (Document) o;
+
+        return sourceFile != null ? sourceFile.getName().equals(document.sourceFile.getName()) : document.sourceFile == null;
+
     }
 }
