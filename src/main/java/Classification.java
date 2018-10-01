@@ -5,6 +5,7 @@ import java.util.*;
 public class Classification {
     Map<String, Integer> words;
     public final int numberOfFiles;
+    private int totalNumberOfWordsInClassification;
 
     public Classification(List<File> sourceFiles, Set<String> stopWords){
         this.words = new HashMap<String, Integer>();
@@ -26,9 +27,11 @@ public class Classification {
                 if(!stopWords.contains(word)) {
 
                     if (words.containsKey(word)) {
+                        totalNumberOfWordsInClassification++;
                         words.put(word, words.get(word) + 1);
 
                     } else {
+                        totalNumberOfWordsInClassification++;
                         this.words.put(word, 1);
 
                     }
@@ -46,13 +49,13 @@ public class Classification {
     }
 
     public int retrieveTotalNumberOfWordsInTheClassification() {
-        int totalNumberOfWordsInClassification = 0;
+//        int totalNumberOfWordsInClassification = 0;
+//
+//        for(String word : words.keySet()){
+//            totalNumberOfWordsInClassification += retrieveNumberOfWordAppearances(word);
+//        }
 
-        for(String word : words.keySet()){
-            totalNumberOfWordsInClassification += retrieveNumberOfWordAppearances(word);
-        }
-
-        return totalNumberOfWordsInClassification;
+        return this.totalNumberOfWordsInClassification;
     }
 
     public double calculateFeatureLikelihood(String documentWord){
